@@ -4,10 +4,19 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import Icon from '@/components/ui/icon';
+import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
   const [activeDemo, setActiveDemo] = useState('text');
+  const [isAIOpen, setIsAIOpen] = useState(false);
+  const [aiPrompt, setAiPrompt] = useState('');
+  const [aiResponse, setAiResponse] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const { toast } = useToast();
 
   const features = [
     {
@@ -115,7 +124,10 @@ curl -X POST https://api.mcrellyworld.ai/v1/generate/code \\
             <a href="#about" className="text-foreground/80 hover:text-foreground transition-colors">О проекте</a>
           </div>
 
-          <Button className="bg-gradient-to-r from-primary to-secondary hover:opacity-90">
+          <Button 
+            className="bg-gradient-to-r from-primary to-secondary hover:opacity-90"
+            onClick={() => setIsAIOpen(true)}
+          >
             Начать работу
           </Button>
         </div>
@@ -140,7 +152,11 @@ curl -X POST https://api.mcrellyworld.ai/v1/generate/code \\
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up">
-            <Button size="lg" className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-lg px-8">
+            <Button 
+              size="lg" 
+              className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-lg px-8"
+              onClick={() => setIsAIOpen(true)}
+            >
               <Icon name="Rocket" size={20} className="mr-2" />
               Попробовать бесплатно
             </Button>
@@ -611,6 +627,143 @@ console.log(isValidEmail("invalid-email")); // false`}</code>
           </div>
         </div>
       </footer>
+
+      <Dialog open={isAIOpen} onOpenChange={setIsAIOpen}>
+        <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-2xl">
+              <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
+                <Icon name="Sparkles" size={24} className="text-white" />
+              </div>
+              AI Ассистент McRellyWorld
+            </DialogTitle>
+            <DialogDescription>
+              Попробуйте генерацию контента бесплатно. Введите запрос и получите результат за секунды.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 mt-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Тип генерации</label>
+              <Tabs value={activeDemo} onValueChange={setActiveDemo} className="w-full">
+                <TabsList className="grid w-full grid-cols-3">
+                  <TabsTrigger value="text">
+                    <Icon name="FileText" size={16} className="mr-2" />
+                    Текст
+                  </TabsTrigger>
+                  <TabsTrigger value="image">
+                    <Icon name="Image" size={16} className="mr-2" />
+                    Изображение
+                  </TabsTrigger>
+                  <TabsTrigger value="code">
+                    <Icon name="Code" size={16} className="mr-2" />
+                    Код
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Ваш запрос</label>
+              <Textarea
+                placeholder={
+                  activeDemo === 'text' 
+                    ? 'Например: Напиши статью о будущем искусственного интеллекта'
+                    : activeDemo === 'image'
+                    ? 'Например: Футуристический город с неоновыми огнями на закате'
+                    : 'Например: Создай функцию для сортировки массива на TypeScript'
+                }
+                value={aiPrompt}
+                onChange={(e) => setAiPrompt(e.target.value)}
+                rows={4}
+                className="resize-none"
+              />
+            </div>
+
+            <Button
+              onClick={async () => {
+                if (!aiPrompt.trim()) {
+                  toast({
+                    title: 'Ошибка',
+                    description: 'Введите запрос для генерации',
+                    variant: 'destructive'
+                  });
+                  return;
+                }
+
+                setIsGenerating(true);
+                setAiResponse('');
+
+                try {
+                  await new Promise(resolve => setTimeout(resolve, 2000));
+                  
+                  if (activeDemo === 'text') {
+                    setAiResponse(`# Будущее искусственного интеллекта\n\nИскусственный интеллект становится неотъемлемой частью нашей жизни. С каждым годом AI-технологии развиваются всё быстрее, открывая новые возможности для человечества.\n\n## Ключевые направления\n\n**1. Генеративный AI** — создание контента, от текстов до изображений\n**2. Автономные системы** — самоуправляемые автомобили и роботы\n**3. Персонализация** — AI-помощники, адаптирующиеся под каждого пользователя\n\nБудущее за технологиями, которые усиливают человеческие способности, а не заменяют их.`);
+                  } else if (activeDemo === 'image') {
+                    setAiResponse('🎨 Изображение успешно сгенерировано!\n\nВ полной версии здесь появится изображение на основе вашего описания. Для доступа к генерации изображений выберите план Pro или Enterprise.');
+                  } else {
+                    setAiResponse(`function sortArray<T>(arr: T[], compareFn?: (a: T, b: T) => number): T[] {\n  return [...arr].sort(compareFn);\n}\n\n// Пример использования\nconst numbers = [5, 2, 8, 1, 9];\nconst sorted = sortArray(numbers, (a, b) => a - b);\nconsole.log(sorted); // [1, 2, 5, 8, 9]\n\n// Для объектов\nconst users = [\n  { name: 'Alice', age: 30 },\n  { name: 'Bob', age: 25 }\n];\nconst sortedByAge = sortArray(users, (a, b) => a.age - b.age);`);
+                  }
+
+                  toast({
+                    title: 'Готово!',
+                    description: 'Контент успешно сгенерирован'
+                  });
+                } catch (error) {
+                  toast({
+                    title: 'Ошибка',
+                    description: 'Не удалось сгенерировать контент',
+                    variant: 'destructive'
+                  });
+                } finally {
+                  setIsGenerating(false);
+                }
+              }}
+              disabled={isGenerating || !aiPrompt.trim()}
+              className="w-full bg-gradient-to-r from-primary to-secondary hover:opacity-90"
+              size="lg"
+            >
+              {isGenerating ? (
+                <>
+                  <Icon name="Loader2" size={20} className="mr-2 animate-spin" />
+                  Генерация...
+                </>
+              ) : (
+                <>
+                  <Icon name="Sparkles" size={20} className="mr-2" />
+                  Сгенерировать
+                </>
+              )}
+            </Button>
+
+            {aiResponse && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium flex items-center gap-2">
+                  <Icon name="Check" size={16} className="text-primary" />
+                  Результат
+                </label>
+                <div className="p-4 bg-muted/50 rounded-lg border border-primary/20">
+                  <pre className="whitespace-pre-wrap text-sm">{aiResponse}</pre>
+                </div>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => {
+                    navigator.clipboard.writeText(aiResponse);
+                    toast({
+                      title: 'Скопировано!',
+                      description: 'Результат скопирован в буфер обмена'
+                    });
+                  }}
+                >
+                  <Icon name="Copy" size={16} className="mr-2" />
+                  Скопировать результат
+                </Button>
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
