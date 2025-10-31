@@ -107,11 +107,11 @@ curl -X POST https://api.mcrellyworld.ai/v1/generate/code \\
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-background to-card particle-bg">
+    <div className="min-h-screen bg-gradient-to-b from-background via-background to-card">
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center animate-pulse-glow animate-spin-slow">
+            <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
               <Icon name="Sparkles" size={24} className="text-white" />
             </div>
             <span className="text-2xl font-bold gradient-text">McRellyWorld</span>
@@ -125,7 +125,7 @@ curl -X POST https://api.mcrellyworld.ai/v1/generate/code \\
           </div>
 
           <Button 
-            className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 hover:scale-105 transition-transform duration-300 animate-bounce-slow"
+            className="bg-gradient-to-r from-primary to-secondary hover:opacity-90"
             onClick={() => setIsAIOpen(true)}
           >
             Начать работу
@@ -135,8 +135,8 @@ curl -X POST https://api.mcrellyworld.ai/v1/generate/code \\
 
       <section className="pt-32 pb-20 px-4">
         <div className="container mx-auto text-center">
-          <Badge className="mb-6 bg-primary/20 text-primary border-primary/30 animate-fade-in energy-border">
-            <Icon name="Cpu" size={14} className="mr-1 animate-spin-slow" />
+          <Badge className="mb-6 bg-primary/20 text-primary border-primary/30 animate-fade-in">
+            <Icon name="Cpu" size={14} className="mr-1" />
             AI-платформа нового поколения
           </Badge>
           
@@ -154,13 +154,13 @@ curl -X POST https://api.mcrellyworld.ai/v1/generate/code \\
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up">
             <Button 
               size="lg" 
-              className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-lg px-8 hover:scale-110 transition-all duration-300 animate-pulse-glow"
+              className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-lg px-8"
               onClick={() => setIsAIOpen(true)}
             >
-              <Icon name="Rocket" size={20} className="mr-2 animate-bounce-slow" />
+              <Icon name="Rocket" size={20} className="mr-2" />
               Попробовать бесплатно
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 border-primary/30 hover:bg-primary/10 hover:scale-105 transition-all duration-300">
+            <Button size="lg" variant="outline" className="text-lg px-8 border-primary/30 hover:bg-primary/10">
               <Icon name="BookOpen" size={20} className="mr-2" />
               Документация
             </Button>
@@ -210,20 +210,20 @@ curl -X POST https://api.mcrellyworld.ai/v1/generate/code \\
             {features.map((feature, index) => (
               <Card 
                 key={index} 
-                className="border-primary/20 hover:border-primary/50 transition-all hover:card-glow cursor-pointer group hover:scale-105 duration-300 animate-fade-in energy-border"
+                className="border-primary/20 hover:border-primary/50 transition-all hover:card-glow cursor-pointer group"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <CardHeader>
-                  <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform animate-pulse-glow`}>
-                    <Icon name={feature.icon as any} size={32} className="text-white group-hover:animate-bounce-slow" />
+                  <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                    <Icon name={feature.icon as any} size={32} className="text-white" />
                   </div>
                   <CardTitle className="text-2xl">{feature.title}</CardTitle>
                   <CardDescription className="text-base">{feature.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button variant="ghost" className="w-full group-hover:bg-primary/10 transition-all duration-300">
+                  <Button variant="ghost" className="w-full group-hover:bg-primary/10">
                     Подробнее
-                    <Icon name="ArrowRight" size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                    <Icon name="ArrowRight" size={16} className="ml-2" />
                   </Button>
                 </CardContent>
               </Card>
